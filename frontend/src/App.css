@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+/* Add borders and padding to schedule cells */
+.schedule-cell {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+/* Style the table header */
+.schedule th {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 8px;
+}
