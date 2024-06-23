@@ -1,16 +1,49 @@
-import './App.css';
 import React, { useState } from 'react';
-import Schedule from './components/Schedule';
-import CourseDropdown from './components/CourseDropdown';
-import CoursesList from './components/courseList'; // Adjust the import path as necessary
+import './App.css'; // Import your CSS file
+import CourseDropdown from './components/CourseDropdown'; // Adjust path as per your project structure
+import Schedule from './components/Schedule'; // Adjust path as per your project structure
 
-function App() {
+const App = () => {
+  // State to manage selected courses
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  // Function to handle course selection
+  const handleCourseSelect = (course) => {
+    // Check if the course is already selected
+    const isSelected = selectedCourses.some(selectedCourse =>
+      selectedCourse.id === course.id && selectedCourse.day === course.day && selectedCourse.time === course.time
+    );
+
+    // If the course is selected, remove it; otherwise, add it
+    if (isSelected) {
+      setSelectedCourses(prevCourses => prevCourses.filter(selectedCourse =>
+        !(selectedCourse.id === course.id && selectedCourse.day === course.day && selectedCourse.time === course.time)
+      ));
+    } else {
+      setSelectedCourses(prevCourses => [...prevCourses, course]);
+    }
+  };
+
   return (
-    <div>
-      <h1>Welcome to Our Website</h1>
-      <CoursesList />
+    <div className="App">
+      <header className="App-header">
+        <h1>Course Scheduler</h1>
+      </header>
+      <main>
+        <div className="container">
+          <div className="row">
+            
+            <div className="col-md-8">
+              <Schedule selectedCourses={selectedCourses} />
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <p>Footer content here</p>
+      </footer>
     </div>
   );
-}
+};
 
 export default App;
