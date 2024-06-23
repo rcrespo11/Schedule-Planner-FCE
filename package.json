@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Schedule planner for FCE",
   "main": "index.js",
+  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +14,14 @@
     "url": "https://github.com/rcrespo11/Schedule-Planner-FCE.git"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "esm": "^3.2.25",
     "express": "^4.19.2",
-    "mysql": "^2.18.1"
+    "mssql": "^10.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.10.0",
+    "node-fetch": "^3.3.2",
+    "sequelize": "^6.37.3",
+    "xlsx": "^0.18.5"
   }
 }

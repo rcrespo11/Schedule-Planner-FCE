@@ -48,3 +48,54 @@
   text-align: center;
   padding: 8px;
 }
+
+/* Add this CSS to your stylesheet */
+.schedule {
+  font-family: Arial, sans-serif;
+}
+
+.course-selection {
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tbody td {
+  position: relative;
+}
+
+/* Style for individual course cells */
+.course-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style for course text */
+.course-text {
+  font-weight: bold;
+}
+
+/* Style for courses displayed in red */
+.red {
+  color: red;
+}
+
