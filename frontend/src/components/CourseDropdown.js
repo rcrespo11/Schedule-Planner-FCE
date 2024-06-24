@@ -8,14 +8,21 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
   useEffect(() => {
     fetch('http://localhost:5000/courses')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => setCourses(data))
-      .catch(error => console.error('Error fetching courses:', error));
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Add a unique id to each course
+      const coursesWithId = data.map(course => ({
+        ...course,
+        id: `${course.NOMBRE}-${course.DIA}-${course.HORARIO}` // Combine properties to create a unique id
+      }));
+      setCourses(coursesWithId);
+    })
+    .catch(error => console.error('Error fetching courses:', error));
   }, []);
 
   const handleSemesterChange = (event) => {
@@ -34,6 +41,8 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   };
 
   const handleCourseSelect = (course) => {
+    console.log('Course being toggled:', course);
+    console.log('Course id:', course.id);
     const isSelected = selectedCourses.some(selected => selected.id === course.id);
     if (isSelected) {
       onCourseSelect(selectedCourses.filter(selected => selected.id !== course.id));
@@ -41,10 +50,11 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       onCourseSelect([...selectedCourses, course]);
     }
   };
+  
 
   const renderDropdown = (course) => {
     const isSelected = selectedCourses.some(selected => selected.id === course.id);
-
+  
     return (
       <div key={course.id} style={{ marginLeft: '20px' }}>
         <input
@@ -54,13 +64,13 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
           onChange={() => handleCourseSelect(course)}
         />
         <label htmlFor={course.id}>
-          <strong>Nombre:</strong> {course.NOMBRE}, <strong>Día:</strong> {course.DIA}, <strong>Horario:</strong> {course.HORARIO}
+          <strong>Nombre:</strong> {course.NOMBRE}, <strong>Día:</strong> {course.DIA}, <strong>Horario:</strong> {course.HORARIO}, <strong>Ambiente:</strong> {course.AMBIENTE}
         </label>
       </div>
     );
   };
+  
 
-  // Organize courses by SEMESTRE, Nombre, and Nombres
   const coursesHierarchy = courses.reduce((acc, course) => {
     const semester = course.SEMESTRE;
     const nombre = course.NOMBRE;
@@ -135,7 +145,9 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   );
 };
 
-export default CourseDropdown;
+export default CourseDropdown; 
+
+
 
 
 
