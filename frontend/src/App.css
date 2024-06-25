@@ -13,3 +13,20 @@
     color: white;
   }
 
+
+
+  /* Add this CSS to differentiate background colors */
+.course-color-1 {
+    background-color: rgba(255, 0, 0, 0.3); /* Red color with 30% opacity */
+  }
+  
+  .course-color-2 {
+    background-color: rgba(0, 255, 0, 0.3); /* Green color with 30% opacity */
+  }
+  
+  .course-color-3 {
+    background-color: rgba(0, 0, 255, 0.3); /* Blue color with 30% opacity */
+  }
+  
+  /* Add more classes for additional colors as needed */
+  
