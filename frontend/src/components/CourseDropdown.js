@@ -5,76 +5,72 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   const [selectedSemester, setSelectedSemester] = useState('');
   const [selectedNombre, setSelectedNombre] = useState('');
   const [selectedNombres, setSelectedNombres] = useState('');
+  const [selectedGrupo, setSelectedGrupo] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:5000/courses')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Add a unique id to each course
-      const coursesWithId = data.map(course => ({
-        ...course,
-        id: `${course.NOMBRE}-${course.DIA}-${course.HORARIO}` // Combine properties to create a unique id
-      }));
-      setCourses(coursesWithId);
-    })
-    .catch(error => console.error('Error fetching courses:', error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Add a unique id to each course
+        const coursesWithId = data.map(course => ({
+          ...course,
+          id: `${course.NOMBRE}-${course.DIA}-${course.HORARIO}` // Combine properties to create a unique id
+        }));
+        setCourses(coursesWithId);
+      })
+      .catch(error => console.error('Error fetching courses:', error));
   }, []);
 
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
     setSelectedNombre('');
     setSelectedNombres('');
+    setSelectedGrupo('');
   };
 
   const handleNombreChange = (event) => {
     setSelectedNombre(event.target.value);
     setSelectedNombres('');
+    setSelectedGrupo('');
   };
 
   const handleNombresChange = (event) => {
     setSelectedNombres(event.target.value);
+    setSelectedGrupo('');
   };
 
-  const handleCourseSelect = (course) => {
-    console.log('Course being toggled:', course);
-    console.log('Course id:', course.id);
-    const isSelected = selectedCourses.some(selected => selected.id === course.id);
+  const handleGrupoChange = (event) => {
+    setSelectedGrupo(event.target.value);
+  };
+
+  const handleCourseSelect = () => {
+    const selectedCoursesInGroup = coursesHierarchy[selectedSemester][selectedNombre][selectedNombres][selectedGrupo];
+    const mergedCourse = selectedCoursesInGroup.reduce((acc, course) => {
+      acc.NOMBRE = course.NOMBRE;
+      acc.HORARIOS = acc.HORARIOS || [];
+      acc.HORARIOS.push({ DIA: course.DIA, HORARIO: course.HORARIO });
+      return acc;
+    }, {});
+
+    const isSelected = selectedCourses.some(selected => selected.NOMBRE === mergedCourse.NOMBRE);
     if (isSelected) {
-      onCourseSelect(selectedCourses.filter(selected => selected.id !== course.id));
+      onCourseSelect(selectedCourses.filter(selected => selected.NOMBRE !== mergedCourse.NOMBRE));
     } else {
-      onCourseSelect([...selectedCourses, course]);
+      onCourseSelect([...selectedCourses, mergedCourse]);
     }
   };
-  
 
-  const renderDropdown = (course) => {
-    const isSelected = selectedCourses.some(selected => selected.id === course.id);
-  
-    return (
-      <div key={course.id} style={{ marginLeft: '20px' }}>
-        <input
-          type="checkbox"
-          id={course.id}
-          checked={isSelected}
-          onChange={() => handleCourseSelect(course)}
-        />
-        <label htmlFor={course.id}>
-          <strong>Nombre:</strong> {course.NOMBRE}, <strong>Día:</strong> {course.DIA}, <strong>Horario:</strong> {course.HORARIO}, <strong>Ambiente:</strong> {course.AMBIENTE}
-        </label>
-      </div>
-    );
-  };
-  
-
+  // Build the hierarchy
   const coursesHierarchy = courses.reduce((acc, course) => {
     const semester = course.SEMESTRE;
     const nombre = course.NOMBRE;
     const nombres = course.NOMBRES;
+    const grupo = course.GRUPO;
 
     if (!acc[semester]) {
       acc[semester] = {};
@@ -83,9 +79,12 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       acc[semester][nombre] = {};
     }
     if (!acc[semester][nombre][nombres]) {
-      acc[semester][nombre][nombres] = [];
+      acc[semester][nombre][nombres] = {};
     }
-    acc[semester][nombre][nombres].push(course);
+    if (!acc[semester][nombre][nombres][grupo]) {
+      acc[semester][nombre][nombres][grupo] = [];
+    }
+    acc[semester][nombre][nombres][grupo].push(course);
 
     return acc;
   }, {});
@@ -135,17 +134,41 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
       {selectedNombres && (
         <div>
+          <label htmlFor="grupo">Grupo:</label>
+          <select id="grupo" onChange={handleGrupoChange} value={selectedGrupo}>
+            <option value="">Select Grupo</option>
+            {Object.keys(coursesHierarchy[selectedSemester][selectedNombre][selectedNombres] || {}).map((grupo, index) => (
+              <option key={index} value={grupo}>
+                {grupo}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {selectedGrupo && (
+        <div>
           <h3>Selected Courses</h3>
-          {coursesHierarchy[selectedSemester][selectedNombre][selectedNombres].map(course =>
-            renderDropdown(course)
-          )}
+          <div style={{ marginLeft: '20px' }}>
+            <input
+              type="checkbox"
+              id={`${selectedNombre}-${selectedNombres}-${selectedGrupo}`}
+              onChange={handleCourseSelect}
+              checked={selectedCourses.some(course => course.NOMBRE === selectedNombre)}
+            />
+            <label htmlFor={`${selectedNombre}-${selectedNombres}-${selectedGrupo}`}>
+              <strong>Nombre:</strong> {selectedNombre}
+            </label>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default CourseDropdown; 
+export default CourseDropdown;
+
+
 
 
 

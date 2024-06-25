@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CourseDropdown from './CourseDropdown'; // Adjust the path as per your file structure
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // Ensure this import is present
 
 const Schedule = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -12,24 +13,20 @@ const Schedule = () => {
     console.log('New selectedCourses state:', updatedCourses);
   };
 
-  // Helper function to format time correctly
-  const formatTime = (time) => {
-    const [hourMinute, period] = time.split(' ');
-    let [hour, minute] = hourMinute.split(':').map(Number);
+  const renderCourseCell = (day, time) => {
+    const coursesForDay = selectedCourses.flatMap(course =>
+      course.HORARIOS.filter(horario => horario.DIA === day && isHourInRange(horario.HORARIO, time))
+        .map(horario => course.NOMBRE)
+    );
 
-    if (period === 'PM' && hour !== 12) {
-      hour += 12;
-    } else if (period === 'AM' && hour === 12) {
-      hour = 0;
-    }
+    // Remove duplicate course names
+    const uniqueCoursesForDay = [...new Set(coursesForDay)];
 
-    return `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}`;
-  };
-
-  // Helper function to check if the hour is within the range of HORARIO
-  const isHourInRange = (horario, hour) => {
-    const [start, end] = horario.split(' - ').map(formatTime);
-    return hour >= start && hour < end;
+    return uniqueCoursesForDay.map((courseName, index) => (
+      <div key={index} className="course-text red">
+        {courseName}
+      </div>
+    ));
   };
 
   return (
@@ -39,7 +36,7 @@ const Schedule = () => {
           <CourseDropdown onCourseSelect={handleCourseSelect} selectedCourses={selectedCourses} />
         </div>
         <div className="col-md-8">
-          <table className="table">
+          <table className="table table-bordered schedule">
             <thead>
               <tr>
                 <th>Time</th>
@@ -48,7 +45,7 @@ const Schedule = () => {
                 <th>MIERCOLES</th>
                 <th>JUEVES</th>
                 <th>VIERNES</th>
-                <th>SABADO</th> {/* Add Saturday here */}
+                <th>SABADO</th>
               </tr>
             </thead>
             <tbody>
@@ -58,71 +55,17 @@ const Schedule = () => {
                 const interval = 90; // 1 hour 30 minutes in minutes
                 const hour = baseHour + Math.floor((baseMinute + index * interval) / 60);
                 const minute = (baseMinute + index * interval) % 60;
-                const slotTime = `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}`;
+                const time = `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute} ${hour < 12 ? 'AM' : 'PM'}`;
 
                 return (
-                  <tr key={`${hour}:${minute}`}>
-                    <td>{`${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute} ${hour < 12 ? 'AM' : 'PM'}`}</td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'LU' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'MA' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'MI' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'JU' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'VI' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      {selectedCourses.filter(course =>
-                        course.DIA === 'SA' &&
-                        isHourInRange(course.HORARIO, slotTime)
-                      ).map(course => (
-                        <div key={`${course.id}-${course.DIA}-${course.HORARIO}`} className="text-danger">
-                          {`${course.NOMBRE} (${course.DIA} - ${course.HORARIO})`}
-                        </div>
-                      ))}
-                    </td>
+                  <tr key={time}>
+                    <td>{time}</td>
+                    <td className="schedule-cell">{renderCourseCell('LU', time)}</td>
+                    <td className="schedule-cell">{renderCourseCell('MA', time)}</td>
+                    <td className="schedule-cell">{renderCourseCell('MI', time)}</td>
+                    <td className="schedule-cell">{renderCourseCell('JU', time)}</td>
+                    <td className="schedule-cell">{renderCourseCell('VI', time)}</td>
+                    <td className="schedule-cell">{renderCourseCell('SA', time)}</td>
                   </tr>
                 );
               })}
@@ -134,7 +77,16 @@ const Schedule = () => {
   );
 };
 
+// Helper function to check if the hour is within the range of HORARIO
+const isHourInRange = (range, hour) => {
+  const [start, end] = range.split(' - ');
+  return hour >= start.trim() && hour <= end.trim();
+};
+
 export default Schedule;
+
+
+
 
 
 

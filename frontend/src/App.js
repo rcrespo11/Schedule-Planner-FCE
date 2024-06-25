@@ -27,7 +27,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Course Scheduler</h1>
+        <h1>Planificador de horarios</h1>
       </header>
       <main>
         <div className="container">
