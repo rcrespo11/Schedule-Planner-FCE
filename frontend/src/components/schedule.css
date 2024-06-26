@@ -1,0 +1,16 @@
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th {
+  border-bottom-width: 2px;
+}
+
+.calendar-cell {
+  border-left: 1px solid #dee2e6;
+}
+
+.calendar-cell:first-child {
+  border-left: none;
+}

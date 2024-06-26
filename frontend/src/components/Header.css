@@ -1,0 +1,24 @@
+.header-container {
+    position: relative;
+    height: 300px; /* Adjust height as needed */
+    overflow: hidden;
+  }
+  
+  .header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire header */
+    z-index: -1; /* Send image to the back */
+  }
+  
+  .header-content {
+    position: relative;
+    z-index: 1; /* Bring content above the image */
+    text-align: center;
+    color: white; /* Adjust text color to be visible on the image */
+    padding-top: 50px; /* Adjust padding based on image height */
+  }
+  
