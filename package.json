@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd frontend && npm start",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && react-scripts build",
     "server": "cd backend && node server.js",
     "heroku-postbuild": "cd frontend && npm install && npm run build"
     
