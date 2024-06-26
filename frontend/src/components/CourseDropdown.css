@@ -1,0 +1,15 @@
+/* CourseDropdown.css */
+.course-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .course-button.selected {
+    background-color: #28a745; /* Change background color when selected */
+  }
+  
