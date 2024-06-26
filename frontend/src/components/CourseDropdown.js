@@ -91,11 +91,11 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
   return (
     <div>
-      <h2>Select Courses</h2>
+      <h2>Selecciona las clases</h2>
       <div>
-        <label htmlFor="semester">Semester:</label>
+        <label htmlFor="semester">Semestre:</label>
         <select id="semester" onChange={handleSemesterChange} value={selectedSemester}>
-          <option value="">Select a Semester</option>
+          <option value="">Selecciona un semestre</option>
           {Object.keys(coursesHierarchy).map((semester, index) => (
             <option key={index} value={semester}>
               {semester}
@@ -106,9 +106,9 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
       {selectedSemester && (
         <div>
-          <label htmlFor="nombre">Nombre:</label>
+          <label htmlFor="nombre">Materia:</label>
           <select id="nombre" onChange={handleNombreChange} value={selectedNombre}>
-            <option value="">Select a Nombre</option>
+            <option value="">Selecciona una materia</option>
             {Object.keys(coursesHierarchy[selectedSemester] || {}).map((nombre, index) => (
               <option key={index} value={nombre}>
                 {nombre}
@@ -120,9 +120,9 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
       {selectedNombre && (
         <div>
-          <label htmlFor="nombres">Nombres:</label>
+          <label htmlFor="nombres">Docente:</label>
           <select id="nombres" onChange={handleNombresChange} value={selectedNombres}>
-            <option value="">Select Nombres</option>
+            <option value="">Selecciona un docente</option>
             {Object.keys(coursesHierarchy[selectedSemester][selectedNombre] || {}).map((nombres, index) => (
               <option key={index} value={nombres}>
                 {nombres}
@@ -136,7 +136,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
         <div>
           <label htmlFor="grupo">Grupo:</label>
           <select id="grupo" onChange={handleGrupoChange} value={selectedGrupo}>
-            <option value="">Select Grupo</option>
+            <option value="">Selecciona el grupo</option>
             {Object.keys(coursesHierarchy[selectedSemester][selectedNombre][selectedNombres] || {}).map((grupo, index) => (
               <option key={index} value={grupo}>
                 {grupo}
@@ -148,7 +148,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
       {selectedGrupo && (
         <div>
-          <h3>Selected Courses</h3>
+          <h3>Cursos disponibles</h3>
           <div style={{ marginLeft: '20px' }}>
             <input
               type="checkbox"
@@ -167,6 +167,10 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 };
 
 export default CourseDropdown;
+
+
+
+
 
 
 

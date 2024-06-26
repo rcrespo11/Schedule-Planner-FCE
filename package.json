@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Schedule planner for FCE",
   "main": "index.js",
-  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +16,8 @@
     "cors": "^2.8.5",
     "esm": "^3.2.25",
     "express": "^4.19.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "mssql": "^10.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.0",

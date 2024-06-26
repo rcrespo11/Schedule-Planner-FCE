@@ -11,6 +11,7 @@
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    font-family: "Lucida Handwriting";
   }
 
 
@@ -25,8 +26,19 @@
   }
   
   .course-color-3 {
-    background-color: rgba(0, 0, 255, 0.3); /* Blue color with 30% opacity */
+    background-color: rgba(44, 199, 30, 0.3); /* Blue color with 30% opacity */
   }
-  
+  .course-color-4 {
+    background-color: rgba(214, 21, 85, 0.3); /* Blue color with 30% opacity */
+  }
+  .course-color-5 {
+    background-color: rgba(7, 63, 85, 0.3); /* Blue color with 30% opacity */
+  }
+  .course-color-6 {
+    background-color: rgb(251, 255, 0); /* Blue color with 30% opacity */
+  }
+  .course-color-7 {
+    background-color: rgba(226, 106, 106, 0.3); /* Blue color with 30% opacity */
+  }
   /* Add more classes for additional colors as needed */
   

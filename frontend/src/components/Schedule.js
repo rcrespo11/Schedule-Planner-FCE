@@ -1,45 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback  } from 'react';
+
 import CourseDropdown from './CourseDropdown'; // Adjust the path as per your file structure
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // Ensure this import is present
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const Schedule = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [courseColors, setCourseColors] = useState({});
+  const [colorIndex, setColorIndex] = useState(1);
+  const calendarRef = useRef(null);
+  
 
-  // Function to handle course selection
+
   const handleCourseSelect = (updatedCourses) => {
-    console.log('Updated courses:', updatedCourses); // Keep this log for debugging
+    const newCourseColors = { ...courseColors };
+    updatedCourses.forEach(course => {
+      if (!newCourseColors[course.NOMBRE]) {
+        newCourseColors[course.NOMBRE] = `course-color-${colorIndex}`;
+        setColorIndex((prevIndex) => (prevIndex % 7) + 1); // Cycle through 1, 2, 3
+      }
+    });
+    setCourseColors(newCourseColors);
     setSelectedCourses(updatedCourses);
-    console.log('New selectedCourses state:', updatedCourses);
   };
 
   const renderCourseCell = (day, time) => {
-    const coursesForDay = selectedCourses.flatMap(course =>
-      course.HORARIOS.filter(horario => horario.DIA === day && isHourInRange(horario.HORARIO, time))
-        .map(horario => course.NOMBRE)
+    const coursesForDay = selectedCourses.filter(course =>
+      course.HORARIOS.some(horario => horario.DIA === day && isHourInRange(horario.HORARIO, time))
     );
 
-    // Remove duplicate course names
-    const uniqueCoursesForDay = [...new Set(coursesForDay)];
-
-    return uniqueCoursesForDay.map((courseName, index) => (
-      <div key={index} className="course-text red">
-        {courseName}
+    return coursesForDay.map((course, index) => (
+      <div 
+        key={`${day}-${time}-${index}`} 
+        className={`course-text ${courseColors[course.NOMBRE] || ''}`}
+      >
+        {course.NOMBRE}
       </div>
     ));
   };
 
+  const downloadPDF = useCallback(() => {
+    const input = calendarRef.current;
+  if (!input) {
+    console.error('Calendar element not found');
+    return;
+  }
+
+  // Store original styles
+  const originalStyles = {
+    width: input.style.width,
+    height: input.style.height,
+    transform: input.style.transform,
+    position: input.style.position,
+  };
+
+  // Set temporary styles for capture
+  input.style.width = '1920px';  // Adjust as needed
+  input.style.height = 'auto';
+  input.style.transform = 'scale(1)';
+  input.style.position = 'absolute';
+
+  html2canvas(input, { useCORS: true, logging: true }).then((canvas) => {
+    // Restore original styles
+    Object.assign(input.style, originalStyles);
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('l', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+    const imgY = 30;
+
+    pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+    pdf.save('calendar.pdf');
+  }).catch(error => {
+    console.error('Error capturing calendar:', error);
+    // Restore original styles in case of error
+    Object.assign(input.style, originalStyles);
+  });
+  }, []);
+
+
+
+
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <CourseDropdown onCourseSelect={handleCourseSelect} selectedCourses={selectedCourses} />
+          <button onClick={downloadPDF} className="btn btn-primary mt-3">
+            Descargar horario en PDF
+          </button>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-9">
+        <div ref={calendarRef}>
           <table className="table table-bordered schedule">
             <thead>
               <tr>
-                <th>Time</th>
+                <th>HORA</th>
                 <th>LUNES</th>
                 <th>MARTES</th>
                 <th>MIERCOLES</th>
@@ -72,10 +135,15 @@ const Schedule = () => {
             </tbody>
           </table>
         </div>
+        
+          </div>
       </div>
     </div>
   );
 };
+
+
+
 
 // Helper function to check if the hour is within the range of HORARIO
 const isHourInRange = (range, hour) => {
@@ -84,6 +152,8 @@ const isHourInRange = (range, hour) => {
 };
 
 export default Schedule;
+
+
 
 
 

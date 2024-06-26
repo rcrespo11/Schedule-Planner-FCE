@@ -40,7 +40,7 @@ const App = () => {
         </div>
       </main>
       <footer>
-        <p>Footer content here</p>
+        <p> LINKS LINKS LINKS</p>
       </footer>
     </div>
   );
