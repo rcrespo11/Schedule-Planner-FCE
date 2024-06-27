@@ -4,7 +4,7 @@ const cors = require('cors'); // Import CORS package
 
 
 const app = express();
-const port = 8080;
+const port = 5000;
 
 // Middleware to enable CORS
 app.use(cors());
