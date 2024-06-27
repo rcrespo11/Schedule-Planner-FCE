@@ -10,7 +10,6 @@
     "build": "cd frontend && CI=false npm run build",
     "server": "cd backend && node server.js",
     "heroku-postbuild": "cd frontend && npm install && npm run build"
-    
   },
   "author": "Rodrigo C.",
   "license": "ISC",
@@ -28,13 +27,11 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.10.0",
     "node-fetch": "^3.3.2",
+    "react-scripts": "^5.0.1",
     "sequelize": "^6.37.3",
-    "xlsx": "^0.18.5",
-    "react-scripts": "^5.0.1"  
+    "xlsx": "^0.18.5"
   },
-
-
   "devDependencies": {
-  
-}
+    "npm-run-all": "^4.1.5"
+  }
 }
