@@ -7,17 +7,17 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   const [selectedNombres, setSelectedNombres] = useState('');
 
   useEffect(() => {
-    fetch('https://squid-app-57j93.ondigitalocean.app/courses')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setCourses(data);
-      })
-      .catch(error => console.error('Error fetching courses:', error));
+    fetch('/api/courses')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      setCourses(data);
+    })
+    .catch(error => console.error('Error fetching courses:', error));
   }, []);
 
   const handleSemesterChange = (event) => {
