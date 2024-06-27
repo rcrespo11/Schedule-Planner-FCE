@@ -7,7 +7,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   const [selectedNombres, setSelectedNombres] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/courses')
+    fetch('https://squid-app-57j93.ondigitalocean.app/:5000/courses')
       .then(response => {
         if (!response.ok) {
           throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
