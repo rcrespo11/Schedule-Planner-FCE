@@ -2,8 +2,9 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors'); // Import CORS package
 
+
 const app = express();
-const port = 5000;
+const port = 8080;
 
 // Middleware to enable CORS
 app.use(cors());
