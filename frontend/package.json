@@ -15,9 +15,11 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "test": "react-scripts test",
+    "start": "npm-run-all -p start:frontend start:backend",
+    "start:frontend": "cd frontend && npm start",
+    "build:frontend": "cd frontend && react-scripts build",
+    "start:backend": "cd backend && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
