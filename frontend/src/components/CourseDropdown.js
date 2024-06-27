@@ -42,15 +42,15 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       console.error('No docente selected');
       return;
     }
-  
+
     const [apellidos, nombres] = selectedDocente.split(', ');
     const selectedCoursesInGroup = coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente]?.[grupo];
-  
+
     if (!selectedCoursesInGroup) {
       console.error('No courses found for the selected combination');
       return;
     }
-  
+
     const mergedCourse = {
       NOMBRE: selectedNombre,
       SEMESTRE: selectedSemester,
@@ -60,10 +60,10 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       HORARIOS: selectedCoursesInGroup.map(course => ({ DIA: course.DIA, HORARIO: course.HORARIO })),
       AMBIENTE: selectedCoursesInGroup[0]?.AMBIENTE || 'N/A'
     };
-  
+
     onCourseSelect(prevSelectedCourses => {
-      const isSelected = isCourseSelected(grupo);
-      if (isSelected) {
+      const isAlreadySelected = isCourseSelected(grupo);
+      if (isAlreadySelected) {
         // Remove the course if it's already selected
         return prevSelectedCourses.filter(course => 
           !(course.NOMBRE === mergedCourse.NOMBRE && 
@@ -80,11 +80,14 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   };
 
   const isCourseSelected = (grupo) => {
+    if (!selectedDocente) return false;
+    const [apellidos, nombres] = selectedDocente.split(', ');
     return selectedCourses.some(course =>
       course.NOMBRE === selectedNombre &&
       course.GRUPO === grupo &&
       course.SEMESTRE === selectedSemester &&
-      course.NOMBRES === selectedNombres
+      course.APELLIDOS === apellidos &&
+      course.NOMBRES === nombres
     );
   };
 
@@ -156,29 +159,31 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   )}
 
 {selectedDocente && (
-  <div>
-    <h3 style={{ marginTop: '40px' }}>Grupos disponibles</h3>
-    {Object.entries(coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente] || {}).map(([grupo, courses], index) => {
-      if (!courses || courses.length === 0) return null;
-      
-      return (
-        <div key={index} style={{ marginBottom: '50px' }}>
-          <input
-            type="checkbox"
-            id={`${selectedNombre}-${selectedDocente}-${grupo}`}
-            onChange={() => handleCourseSelect(grupo)}
-            checked={isCourseSelected(grupo)}
-          />
-          <label htmlFor={`${selectedNombre}-${selectedDocente}-${grupo}`} style={clickableStyle}>
-            <strong>Grupo:</strong> {grupo} - <strong>Horarios:</strong> {
-              courses.map(course => `${course.DIA} ${course.HORARIO}`).join(', ')
-            } - <strong>Ambiente:</strong> {courses[0]?.AMBIENTE || 'N/A'}
-          </label>
+        <div>
+          <h3 style={{ marginTop: '40px' }}>Grupos disponibles</h3>
+          {Object.entries(coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente] || {}).map(([grupo, courses], index) => {
+            if (!courses || courses.length === 0) return null;
+            
+            const isSelected = isCourseSelected(grupo);
+            
+            return (
+              <div key={index} style={{ marginBottom: '50px' }}>
+                <input
+                  type="checkbox"
+                  id={`${selectedNombre}-${selectedDocente}-${grupo}`}
+                  onChange={() => handleCourseSelect(grupo)}
+                  checked={isSelected}
+                />
+                <label htmlFor={`${selectedNombre}-${selectedDocente}-${grupo}`} style={clickableStyle}>
+                  <strong>Grupo:</strong> {grupo} - <strong>Horarios:</strong> {
+                    courses.map(course => `${course.DIA} ${course.HORARIO}`).join(', ')
+                  } - <strong>Ambiente:</strong> {courses[0]?.AMBIENTE || 'N/A'}
+                </label>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-)}
+      )}
     </div>
   );
 };
