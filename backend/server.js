@@ -4,10 +4,12 @@ const cors = require('cors'); // Import CORS package
 
 
 const app = express();
-const port = 5000;
+const port =  process.env.PORT || 5000;
 
 // Middleware to enable CORS
-app.use(cors());
+app.use(cors({
+  origin: 'https://squid-app-57j93.ondigitalocean.app/'
+}));
 
 // MySQL connection setup
 const db = mysql.createConnection({
@@ -43,6 +45,6 @@ app.get('/courses', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on https://squid-app-57j93.ondigitalocean.app/:${port}`);
+  console.log(`Server running on port ${port}`);
 });
 
