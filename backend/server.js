@@ -4,7 +4,7 @@ const cors = require('cors'); // Import CORS package
 
 
 const app = express();
-const port =  process.env.PORT || 5000;
+const port =  process.env.PORT || 8080;
 
 // Middleware to enable CORS
 app.use(cors({
@@ -44,7 +44,7 @@ app.get('/courses', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
+app.listen(port, '0.0.0.0',  () => {
   console.log(`Server running on port ${port}`);
 });
 
