@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "cd frontend && npm install",
     "start": "cd frontend && npm start",
     "build": "cd frontend && react-scripts build",
     "server": "cd backend && node server.js",
