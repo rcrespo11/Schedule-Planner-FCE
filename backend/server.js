@@ -10,11 +10,11 @@ app.use(cors());
 
 // MySQL connection setup
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '78347118Casa',
+  host: 'db-mysql-nyc3-97524-do-user-17057538-0.c.db.ondigitalocean.com',
+  user: 'doadmin',
+  password: 'AVNS_sYcDpRswUGHAnYdePSh',
   database: 'horario',
-  port: 3306
+  port: 25060 // Default MySQL port for DigitalOcean
 });
 
 // Connect to the database
@@ -42,6 +42,6 @@ app.get('/courses', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on https://squid-app-57j93.ondigitalocean.app/:${port}`);
 });
 
