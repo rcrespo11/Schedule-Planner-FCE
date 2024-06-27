@@ -43,3 +43,19 @@
   /* Add more classes for additional colors as needed */
   
 
+  .facebook-link {
+    color: #000000;  /* Facebook blue */
+  }
+  
+  .instagram-link {
+    color: #000000;  /* Instagram pink */
+  }
+  
+  .tiktok-link {
+    color: #000000;  /* TikTok black */
+  }
+  
+  /* If you want to change the color when hovering over the link */
+  .facebook-link:hover, .instagram-link:hover, .tiktok-link:hover {
+    color: #555555be;  /* Dark grey on hover */
+  }

@@ -40,7 +40,10 @@ const App = () => {
         </div>
       </main>
       <footer>
-        <p> LINKS LINKS LINKS</p>
+        <a>Nuestras redes:   </a>
+        <a href="https://www.facebook.com/share/hr7GwvR62DLx5e3g/" target="_blank" rel="noopener noreferrer" className="facebook-link">Facebook</a> |
+    <a href="https://www.instagram.com/t.c.transformando_comercial?utm_source=qr&igsh=NWk2YTV5MmZlOHZi" target="_blank" rel="noopener noreferrer" className="instagram-link">Instagram</a> |
+    <a href="https://www.tiktok.com/@transformando_comercial_?_t=8nYD8Z2fKRp&_r=1" target="_blank" rel="noopener noreferrer" className="tiktok-link">TikTok</a>
       </footer>
     </div>
   );
