@@ -32,7 +32,8 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   };
 
   const handleNombresChange = (event) => {
-    setSelectedNombres(event.target.value);
+    const [apellidos, nombres] = event.target.value.split('|');
+    setSelectedNombres(apellidos);
   };
 
   const handleCourseSelect = (grupo) => {
@@ -125,9 +126,14 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
           <label htmlFor="nombres" style={{ fontFamily: 'Arial, sans-serif', fontSize: '14px', fontWeight: 'bold' }}>Docente:</label>
           <select id="nombres" onChange={handleNombresChange} value={selectedNombres} style={{ fontSize: '12px' }}>
             <option value="">Selecciona un docente</option>
-            {Object.keys(coursesHierarchy[selectedSemester][selectedNombre] || {}).map((nombres, index) => (
-              <option key={index} value={nombres}>{nombres}</option>
-            ))}
+            {Object.keys(coursesHierarchy[selectedSemester][selectedNombre] || {}).map((apellidos, index) => {
+          const nombres = coursesHierarchy[selectedSemester][selectedNombre][apellidos][0].NOMBRES;
+          return (
+            <option key={index} value={`${apellidos}|${nombres}`}>
+              {`${apellidos}, ${nombres}`}
+            </option>
+            );
+            })}
           </select>
         </div>
       )}
