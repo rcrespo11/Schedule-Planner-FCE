@@ -11,9 +11,9 @@ app.use(express.json());
 
 // Database connection setup
 const db = mysql.createConnection({
-  host: 'db-mysql-nyc3-97524-do-user-17057538-0.c.db.ondigitalocean.com',
+  host: 'dbaas-db-7356385-do-user-17076954-0.c.db.ondigitalocean.com',
   user: 'doadmin',
-  password: 'AVNS_sYcDpRswUGHAnYdePSh',
+  password: 'AVNS_DLiC-r-dZBNls4KRkGI',
   database: 'horario',
   port: 25060
 });

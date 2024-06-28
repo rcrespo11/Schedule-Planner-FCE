@@ -3,7 +3,7 @@
 const fetchCourses = async () => {
     try {
       const fetch = (await import('node-fetch')).default;
-      const response = await fetch('https://squid-app-57j93.ondigitalocean.app/:5000/courses');
+      const response = await fetch('https://starfish-app-ukrg9.ondigitalocean.app/:5000/courses');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

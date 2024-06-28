@@ -6,11 +6,11 @@ const data = JSON.parse(fs.readFileSync('undefined.json', 'utf8'));
 
 // MySQL connection configuration
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '78347118Casa',
+  host: 'dbaas-db-7356385-do-user-17076954-0.c.db.ondigitalocean.com',
+  user: 'doadmin',
+  password: 'AVNS_DLiC-r-dZBNls4KRkGI',
   database: 'horario',
-  port: 3306
+  port: 25060
 });
 
 connection.connect((err) => {
