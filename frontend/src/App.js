@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css'; // Import your CSS file
 import CourseDropdown from './components/CourseDropdown'; // Adjust path as per your project structure
 import Schedule from './components/Schedule'; // Adjust path as per your project structure
+import centroImage from './Centro.jpeg';
 
 const App = () => {
   // State to manage selected courses
@@ -32,9 +33,15 @@ const App = () => {
       <main>
         <div className="container">
           <div className="row">
-            
             <div className="col-md-8">
               <Schedule selectedCourses={selectedCourses} />
+            </div>
+            <div className="col-md-4 image-right">
+              <img 
+                src={centroImage} // Replace with your image path
+                alt="Descriptive text"
+                style={{ maxWidth: '100%', marginLeft: 'auto', paddingLeft: '250px' }}
+              />
             </div>
           </div>
         </div>
@@ -42,11 +49,12 @@ const App = () => {
       <footer>
         <a>Nuestras redes:   </a>
         <a href="https://www.facebook.com/share/hr7GwvR62DLx5e3g/" target="_blank" rel="noopener noreferrer" className="facebook-link">Facebook</a> |
-    <a href="https://www.instagram.com/t.c.transformando_comercial?utm_source=qr&igsh=NWk2YTV5MmZlOHZi" target="_blank" rel="noopener noreferrer" className="instagram-link">Instagram</a> |
-    <a href="https://www.tiktok.com/@transformando_comercial_?_t=8nYD8Z2fKRp&_r=1" target="_blank" rel="noopener noreferrer" className="tiktok-link">TikTok</a>
+        <a href="https://www.instagram.com/t.c.transformando_comercial?utm_source=qr&igsh=NWk2YTV5MmZlOHZi" target="_blank" rel="noopener noreferrer" className="instagram-link">Instagram</a> |
+        <a href="https://www.tiktok.com/@transformando_comercial_?_t=8nYD8Z2fKRp&_r=1" target="_blank" rel="noopener noreferrer" className="tiktok-link">TikTok</a>
       </footer>
     </div>
   );
 };
 
 export default App;
+

@@ -59,3 +59,9 @@
   .facebook-link:hover, .instagram-link:hover, .tiktok-link:hover {
     color: #555555be;  /* Dark grey on hover */
   }
+
+  .image-right {
+    
+    padding-right: 200px; /* Adjust the padding as needed */
+  }
+  
