@@ -62,7 +62,7 @@
   padding: 25px;
 }
 
-/* Add this CSS to your stylesheet */
+
 .schedule {
   font-family: Arial, sans-serif;
 }
@@ -157,7 +157,7 @@ body {
   top: 55%; /* Adjust as needed */
   left: 50%; /* Adjust as needed */
   transform: translate(-50%, -50%); /* Center the watermark */
-  opacity: 0.45; /* Adjust opacity as desired */
+  opacity: 0.40; /* Adjust opacity as desired */
   pointer-events: none; /* Ensure clicks go through watermark */
   z-index: 1; /* Send the watermark behind table content */
   background-image: url('./logo7.png'); /* Replace with your watermark image path */

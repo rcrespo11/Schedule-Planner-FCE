@@ -36,11 +36,11 @@ const App = () => {
             <div className="col-md-8">
               <Schedule selectedCourses={selectedCourses} />
             </div>
-            <div className="col-md-4 image-right">
+            <div className="col-md-4 justify-content-end">
               <img 
                 src={centroImage} // Replace with your image path
                 alt="Descriptive text"
-                style={{ maxWidth: '100%', marginLeft: 'auto', paddingLeft: '250px' }}
+                style={{ maxWidth: '100%', marginLeft: 'auto', paddingLeft: '250px' , marginRight: 'auto'}}
               />
             </div>
           </div>
