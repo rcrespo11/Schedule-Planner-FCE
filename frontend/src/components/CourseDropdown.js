@@ -43,7 +43,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       return;
     }
 
-    const [apellidos, nombres] = selectedDocente.split(', ');
+    const [apellidos, nombres] = selectedDocente.split(' ');
     const selectedCoursesInGroup = coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente]?.[grupo];
 
     if (!selectedCoursesInGroup) {
@@ -100,7 +100,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   const coursesHierarchy = courses.reduce((acc, course) => {
     const semester = course.SEMESTRE;
     const nombre = course.NOMBRE;
-    const docenteKey = `${course.APELLIDOS}, ${course.NOMBRES}`;
+    const docenteKey = `${course.APELLIDOS} ${course.NOMBRES}`;
     const grupo = course.GRUPO;
 
     if (!acc[semester]) acc[semester] = {};
