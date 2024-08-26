@@ -30,13 +30,7 @@ const App = () => {
       <header className="App-header">
         
         <h1>Planificador de horarios</h1>
-        <div className="col-md-4 ">
-              <img 
-                src={centroImage} // Replace with your image path
-                alt="Descriptive text"
-                style={{ maxWidth: '100%', paddingLeft: '300px' , marginLeft: 200, marginTop: 500}}
-              />
-            </div>
+        
       </header>
       <main>
         <div className="container">
