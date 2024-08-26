@@ -81,7 +81,7 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
   const isCourseSelected = (grupo) => {
     if (!selectedDocente) return false;
-    const [apellidos, nombres] = selectedDocente.split(', ');
+    const [apellidos, nombres] = selectedDocente.split(' ');
     return selectedCourses.some(course =>
       course.NOMBRE === selectedNombre &&
       course.GRUPO === grupo &&
