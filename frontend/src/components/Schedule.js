@@ -32,16 +32,19 @@ const Schedule = () => {
     const coursesForDay = selectedCourses.filter(course =>
       course.HORARIOS.some(horario => horario.DIA === day && isHourInRange(horario.HORARIO, time))
     );
-
-    return coursesForDay.map((course, index) => (
-      <div key={`${day}-${time}-${index}`} className={`course-text ${courseColors[course.NOMBRE] || ''}`}>
-        <strong style={{ fontSize: '10px' }}>{course.NOMBRE}</strong>
-        <div className="course-info">
-          <span style={{ fontSize: '11px' }}>{course.AMBIENTE}</span>
-          <span style={{ fontSize: '11px' }}>G: {course.GRUPO}</span>
+  
+    return coursesForDay.map((course, index) => {
+      const horarioForDay = course.HORARIOS.find(horario => horario.DIA === day);
+      return (
+        <div key={`${day}-${time}-${index}`} className={`course-text ${courseColors[course.NOMBRE] || ''}`}>
+          <strong style={{ fontSize: '10px' }}>{course.NOMBRE}</strong>
+          <div className="course-info">
+            <span style={{ fontSize: '11px' }}>{horarioForDay?.AMBIENTE || 'N/A'}</span>
+            <span style={{ fontSize: '11px' }}>G: {course.GRUPO}</span>
+          </div>
         </div>
-      </div>
-    ));
+      );
+    });
   };
 
   const downloadPDF = useCallback(() => {

@@ -57,8 +57,11 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       APELLIDOS: apellidos,
       NOMBRES: nombres,
       GRUPO: grupo,
-      HORARIOS: selectedCoursesInGroup.map(course => ({ DIA: course.DIA, HORARIO: course.HORARIO })),
-      AMBIENTE: selectedCoursesInGroup[0]?.AMBIENTE || 'N/A'
+      HORARIOS: selectedCoursesInGroup.map(course => ({
+        DIA: course.DIA,
+        HORARIO: course.HORARIO,
+        AMBIENTE: course.AMBIENTE // Include AMBIENTE for each day
+      }))
     };
 
     onCourseSelect(prevSelectedCourses => {
