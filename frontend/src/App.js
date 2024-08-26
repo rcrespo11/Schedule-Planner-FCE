@@ -28,7 +28,15 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
+        
         <h1>Planificador de horarios</h1>
+        <div className="col-md-4 ">
+              <img 
+                src={centroImage} // Replace with your image path
+                alt="Descriptive text"
+                style={{ maxWidth: '100%', paddingLeft: '300px' , marginLeft: 200, marginTop: 500}}
+              />
+            </div>
       </header>
       <main>
         <div className="container">
@@ -36,13 +44,7 @@ const App = () => {
             <div className="col-md-8">
               <Schedule selectedCourses={selectedCourses} />
             </div>
-            <div className="col-md-4 justify-content-end">
-              <img 
-                src={centroImage} // Replace with your image path
-                alt="Descriptive text"
-                style={{ maxWidth: '100%', marginLeft: 'auto', paddingLeft: '250px' , marginRight: 'auto'}}
-              />
-            </div>
+            
           </div>
         </div>
       </main>
