@@ -4,35 +4,37 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
   const [courses, setCourses] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState('');
   const [selectedNombre, setSelectedNombre] = useState('');
+  const [selectedNombres, setSelectedNombres] = useState('');
   const [selectedDocente, setSelectedDocente] = useState('');
 
   useEffect(() => {
     fetch('/api/courses')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setCourses(data);
-      })
-      .catch(error => console.error('Error fetching courses:', error));
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      setCourses(data);
+    })
+    .catch(error => console.error('Error fetching courses:', error));
   }, []);
 
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
     setSelectedNombre('');
-    setSelectedDocente('');
+    setSelectedNombres('');
   };
 
   const handleNombreChange = (event) => {
     setSelectedNombre(event.target.value);
-    setSelectedDocente('');
+    setSelectedNombres('');
   };
 
-  const handleDocenteChange = (event) => {
-    setSelectedDocente(event.target.value);
+  const handleNombresChange = (event) => {
+    const [apellidos, nombres] = event.target.value.split('|');
+    setSelectedNombres(apellidos);
   };
 
   const handleCourseSelect = (grupo) => {
@@ -56,23 +58,22 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
       NOMBRES: nombres,
       GRUPO: grupo,
       HORARIOS: selectedCoursesInGroup.map(course => ({ DIA: course.DIA, HORARIO: course.HORARIO })),
-      AMBIENTE: selectedCoursesInGroup.reduce((acc, course) => ({
-        ...acc,
-        [course.DIA]: course.AMBIENTE
-      }), {})
+      AMBIENTE: selectedCoursesInGroup[0]?.AMBIENTE || 'N/A'
     };
 
     onCourseSelect(prevSelectedCourses => {
       const isAlreadySelected = isCourseSelected(grupo);
       if (isAlreadySelected) {
-        return prevSelectedCourses.filter(course =>
-          !(course.NOMBRE === mergedCourse.NOMBRE &&
+        // Remove the course if it's already selected
+        return prevSelectedCourses.filter(course => 
+          !(course.NOMBRE === mergedCourse.NOMBRE && 
             course.GRUPO === mergedCourse.GRUPO &&
             course.SEMESTRE === mergedCourse.SEMESTRE &&
             course.APELLIDOS === mergedCourse.APELLIDOS &&
             course.NOMBRES === mergedCourse.NOMBRES)
         );
       } else {
+        // Add the course if it's not selected
         return [...prevSelectedCourses, mergedCourse];
       }
     });
@@ -90,6 +91,12 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
     );
   };
 
+  const handleDocenteChange = (event) => {
+    setSelectedDocente(event.target.value);
+  };
+
+
+  // Build the hierarchy
   const coursesHierarchy = courses.reduce((acc, course) => {
     const semester = course.SEMESTRE;
     const nombre = course.NOMBRE;
@@ -105,9 +112,11 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
     return acc;
   }, {});
 
+
   const clickableStyle = {
     cursor: 'pointer',
-    textDecoration: 'underline'
+     // Add underline effect when hovered
+  
   };
 
   return (
@@ -135,21 +144,21 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
         </div>
       )}
 
-      {selectedNombre && (
-        <div>
-          <label htmlFor="docente" style={{ fontFamily: 'Arial, sans-serif', fontSize: '14px', fontWeight: 'bold' }}>Docente:</label>
-          <select id="docente" onChange={handleDocenteChange} value={selectedDocente} style={{ fontSize: '12px' }}>
-            <option value="">Selecciona un docente</option>
-            {Object.keys(coursesHierarchy[selectedSemester][selectedNombre] || {}).map((docenteKey, index) => (
-              <option key={index} value={docenteKey}>
-                {docenteKey}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+{selectedNombre && (
+    <div>
+      <label htmlFor="docente" style={{ fontFamily: 'Arial, sans-serif', fontSize: '14px', fontWeight: 'bold' }}>Docente:</label>
+      <select id="docente" onChange={handleDocenteChange} value={selectedDocente} style={{ fontSize: '12px' }}>
+        <option value="">Selecciona un docente</option>
+        {Object.keys(coursesHierarchy[selectedSemester][selectedNombre] || {}).map((docenteKey, index) => (
+          <option key={index} value={docenteKey}>
+            {docenteKey}
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
 
-      {selectedDocente && (
+{selectedDocente && (
         <div>
           <h3 style={{ marginTop: '40px' }}>Grupos disponibles</h3>
           {Object.entries(coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente] || {}).map(([grupo, courses], index) => {
@@ -180,5 +189,4 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 };
 
 export default CourseDropdown;
-
 

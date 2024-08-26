@@ -37,89 +37,112 @@ const Schedule = () => {
       <div key={`${day}-${time}-${index}`} className={`course-text ${courseColors[course.NOMBRE] || ''}`}>
         <strong style={{ fontSize: '10px' }}>{course.NOMBRE}</strong>
         <div className="course-info">
-          {course.HORARIOS.map((horario, hIndex) => (
-            <div key={hIndex}>
-              <span style={{ fontSize: '11px' }}>{course.AMBIENTE[horario.DIA] || 'N/A'}</span>
-              <span style={{ fontSize: '11px' }}>G: {course.GRUPO}</span>
-            </div>
-          ))}
+          <span style={{ fontSize: '11px' }}>{course.AMBIENTE}</span>
+          <span style={{ fontSize: '11px' }}>G: {course.GRUPO}</span>
         </div>
       </div>
     ));
   };
 
-  const isHourInRange = (horaCurso, horaCell) => {
-    const [start, end] = horaCurso.split('-').map(h => {
-      const [hours, minutes] = h.split(':').map(Number);
-      return hours * 60 + minutes;
-    });
-    const [cellHours, cellMinutes] = horaCell.split(':').map(Number);
-    const cellTime = cellHours * 60 + cellMinutes;
-
-    return cellTime >= start && cellTime <= end;
-  };
-
-  const handleDownload = useCallback(() => {
-    if (calendarRef.current) {
-      html2canvas(calendarRef.current).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = 208;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-
-        let position = 0;
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pdf.internal.pageSize.getHeight();
-
-        while (heightLeft >= 0) {
-          position -= pdf.internal.pageSize.getHeight();
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pdf.internal.pageSize.getHeight();
-        }
-
-        pdf.save('schedule.pdf');
-      });
+  const downloadPDF = useCallback(() => {
+    const input = calendarRef.current;
+    if (!input) {
+      console.error('Calendar element not found');
+      return;
     }
-  }, [calendarRef]);
+
+    const originalStyles = {
+      width: input.style.width,
+      height: input.style.height,
+      transform: input.style.transform,
+      position: input.style.position,
+    };
+
+    input.style.width = '1920px'; // Adjust as needed
+    input.style.height = 'auto';
+    input.style.transform = 'scale(1)';
+    input.style.position = 'absolute';
+
+    html2canvas(input, { useCORS: true, logging: true }).then((canvas) => {
+      Object.assign(input.style, originalStyles);
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('calendar.pdf');
+    }).catch(error => {
+      console.error('Error capturing calendar:', error);
+      Object.assign(input.style, originalStyles);
+    });
+  }, []);
 
   return (
-    <div>
-      <CourseDropdown onCourseSelect={handleCourseSelect} selectedCourses={selectedCourses} />
-      <div ref={calendarRef} className="calendar-container">
-        <table className="calendar-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Lunes</th>
-              <th>Martes</th>
-              <th>Miércoles</th>
-              <th>Jueves</th>
-              <th>Viernes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.from({ length: 10 }, (_, index) => (
-              <tr key={index}>
-                <td>{`${8 + index}:00`}</td>
-                {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, dayIndex) => (
-                  <td key={dayIndex}>{renderCourseCell(day, `${8 + index}:00`)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button onClick={handleDownload}>Download as PDF</button>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-4 mb-4"> {/* Adjusted width and added margin-bottom */}
+          <CourseDropdown onCourseSelect={handleCourseSelect} selectedCourses={selectedCourses} />
+          <button onClick={downloadPDF} className="btn btn-primary mt-3">
+            Descargar horario en PDF
+          </button>
+        </div>
+        <div className="col-md-8"> {/* Adjusted width */}
+          <div ref={calendarRef}>
+            <table className="table table-bordered schedule">
+              <thead>
+                <tr>
+                  <th>HORA</th>
+                  <th>LUNES</th>
+                  <th>MARTES</th>
+                  <th>MIERCOLES</th>
+                  <th>JUEVES</th>
+                  <th>VIERNES</th>
+                  <th>SABADO</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 11 }, (_, index) => {
+                  const baseHour = 6; // Start from 6 AM
+                  const baseMinute = 45; // Start from 45 minutes
+                  const interval = 90; // 1 hour 30 minutes in minutes
+                  const hour = baseHour + Math.floor((baseMinute + index * interval) / 60);
+                  const minute = (baseMinute + index * interval) % 60;
+                  const time = `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute} ${hour < 12 ? 'AM' : 'PM'}`;
+
+                  return (
+                    <tr key={time}>
+                      <td>{time}</td>
+                      <td className="schedule-cell">{renderCourseCell('LU', time)}</td>
+                      <td className="schedule-cell">{renderCourseCell('MA', time)}</td>
+                      <td className="schedule-cell">{renderCourseCell('MI', time)}</td>
+                      <td className="schedule-cell">{renderCourseCell('JU', time)}</td>
+                      <td className="schedule-cell">{renderCourseCell('VI', time)}</td>
+                      <td className="schedule-cell">{renderCourseCell('SA', time)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Schedule;
+const isHourInRange = (range, hour) => {
+  const [start, end] = range.split(' - ');
+  return hour >= start.trim() && hour <= end.trim();
+};
 
+export default Schedule;
 
 
 
