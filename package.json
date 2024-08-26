@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cd backend && node server.js",
-    "build": "cd frontend && npm install && npm start",
+    "build": "cd frontend && npm install && CI=false npm run build",
     "heroku-postbuild": "npm run build"
   },
   "author": "Rodrigo C.",
