@@ -163,30 +163,47 @@ const CourseDropdown = ({ onCourseSelect, selectedCourses }) => {
 
 {selectedDocente && (
         <div>
-          <h3 style={{ marginTop: '40px' }}>Grupos disponibles</h3>
-          {Object.entries(coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente] || {}).map(([grupo, courses], index) => {
-            if (!courses || courses.length === 0) return null;
-            
-            const isSelected = isCourseSelected(grupo);
-            
-            return (
-              <div key={index} style={{ marginBottom: '50px' }}>
-                <input
-                  type="checkbox"
-                  id={`${selectedNombre}-${selectedDocente}-${grupo}`}
-                  onChange={() => handleCourseSelect(grupo)}
-                  checked={isSelected}
-                />
-                <label htmlFor={`${selectedNombre}-${selectedDocente}-${grupo}`} style={clickableStyle}>
-                  <strong>Grupo:</strong> {grupo} - <strong>Horarios:</strong> {
-                    courses.map(course => `${course.DIA} ${course.HORARIO}`).join(', ')
-                  } - <strong>Ambiente:</strong> {courses[0]?.AMBIENTE || 'N/A'}
-                </label>
+        <h3 style={{ marginTop: '40px' }}>Grupos disponibles</h3>
+        {Object.entries(coursesHierarchy[selectedSemester]?.[selectedNombre]?.[selectedDocente] || {}).map(([grupo, courses], index) => {
+          if (!courses || courses.length === 0) return null;
+          
+          const isSelected = isCourseSelected(grupo);
+          
+          // Group courses by day and collect unique AMBIENTEs
+          const coursesByDay = courses.reduce((acc, course) => {
+            if (!acc[course.DIA]) {
+              acc[course.DIA] = { horarios: [], ambientes: new Set() };
+            }
+            acc[course.DIA].horarios.push(course.HORARIO);
+            acc[course.DIA].ambientes.add(course.AMBIENTE);
+            return acc;
+          }, {});
+          
+          return (
+            <div key={index} style={{ marginBottom: '20px' }}>
+              <input
+                type="checkbox"
+                id={`${selectedNombre}-${selectedDocente}-${grupo}`}
+                onChange={() => handleCourseSelect(grupo)}
+                checked={isSelected}
+              />
+              <label htmlFor={`${selectedNombre}-${selectedDocente}-${grupo}`} style={clickableStyle}>
+                <strong>Grupo:</strong> {grupo}
+              </label>
+              <div style={{ marginLeft: '20px', fontSize: '12px' }}>
+                {Object.entries(coursesByDay).map(([day, { horarios, ambientes }]) => (
+                  <div key={day}>
+                    <strong>{day}:</strong> {horarios.join(', ')}
+                    <br />
+                    <strong>Ambiente(s):</strong> {Array.from(ambientes).join(', ')}
+                  </div>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
+          );
+        })}
+      </div>
+    )}
     </div>
   );
 };
