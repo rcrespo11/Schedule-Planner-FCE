@@ -6,11 +6,11 @@ const data = JSON.parse(fs.readFileSync('undefined.json', 'utf8'));
 
 // MySQL connection configuration
 const connection = mysql.createConnection({
-  host: 'dbaas-db-7356385-do-user-17076954-0.c.db.ondigitalocean.com',
-  user: 'doadmin',
-  password: 'AVNS_DLiC-r-dZBNls4KRkGI',
-  database: 'horario',
-  port: 25060
+  host: 'nuskkyrsgmn5rw8c.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+  user: 'zrnqoodol2tt2kjf',
+  password: 'h9ihisvn1pxsde1v',
+  database: 'p9d5zs72occev6kd',
+  port: 3306
 });
 
 connection.connect((err) => {
